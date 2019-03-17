@@ -48,11 +48,6 @@ def get_all_entries():
             entries[location].append([date,url])
         else:
             entries[location]=[[date,url]]
-    return entries
-
-        
-def get_sd_entries():
-    entries = get_org_entries()
     sd_entries = {}
     for entry in entries:
         if 'iego' in entry:
@@ -65,24 +60,11 @@ def get_sd_entries():
                 sd_entries[entry].append(entries[entry])
             if not entry in sd_entries:
                 sd_entries[entry] = entries[entry]  
-    return sd_entries
-
-        
-# Save a dictionary into a pickle file.
-def save_entries():
-    sd_entries = get_sd_entries()
+#save entries
     pickle.dump(sd_entries, open( "C:/Users/Dan Averbuj/Documents/Misc/Programming/save.p", "wb" ) )
-    
-
+    new=sd_entries
 # Load the dictionary back from the pickle file.
-def load_entries():
-    old_entries = pickle.load( open( "C:/Users/Dan Averbuj/Documents/Misc/Programming/save.p", "rb" ) )
-    return old_entries
-
-
-def show_diff():
-    old = load_entries()
-    new = get_sd_entries()
+    old = pickle.load( open( "C:/Users/Dan Averbuj/Documents/Misc/Programming/save.p", "rb" ) )
     diff = {}
     if old != new:
         keys = old.keys()
@@ -97,11 +79,7 @@ def show_diff():
     else:
         return False
     save_entries()
-    return diff
-
-
-def send_mail():
-    diff = show_diff()
+#send mail
     content = ''
     if diff:
         for entry in diff:
@@ -111,7 +89,6 @@ def send_mail():
                 url = loc[1]
                 if content == '':
                     content = """Subject: New CDFW job(s) in San Diego!
-
     A job was added on %s at %s, here's the job description:
     %s""" % (date,location,url)
                 else:
@@ -124,8 +101,6 @@ def send_mail():
     mail = smtplib.SMTP('smtp.gmail.com',587)
     mail.ehlo()
     mail.starttls()
-    mail.login('daverbuj1@gmail.com','fakepassword')
+    mail.login('daverbuj1@gmail.com','PASSWORDHERE')
     mail.sendmail('daverbuj1@gmail.com','dan.averbuj@gmail.com', content)
     mail.close()
-
-send_mail()
