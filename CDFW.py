@@ -1,8 +1,9 @@
 import pickle
 from pprint import pprint
+import urllib.request
+import smtplib
 
 def get_html():
-    import urllib.request
     file = urllib.request.urlopen('https://www.wildlife.ca.gov/Employment/Seasonal')
     html = str(file.read())
     return html
@@ -108,7 +109,6 @@ def show_diff():
 
 
 def send_mail():
-    import smtplib
     diff = show_diff()
     content = ''
     if diff:
