@@ -27,10 +27,6 @@ def get_all_entries():
             html_block = html_block[end_entry:]
         else:
             break
-    return raw_entries
-    
-def get_org_entries():
-    raw_entries = get_all_entries()
     entries = {}
     for entry in raw_entries:
         start_loc = entry.find('ocated in')+10
