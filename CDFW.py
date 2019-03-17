@@ -3,6 +3,7 @@ from pprint import pprint
 import urllib.request
 import smtplib
 
+# Outputs first job posting and ending position
 def get_next_entry(html_block):
     start_point = html_block.find('<a href=')
     if start_point == -1:
@@ -13,7 +14,8 @@ def get_next_entry(html_block):
     entry = html_block[start_entry:end_entry-1]
     return entry, end_entry
     
-def get_all_entries():
+def send_jobs():
+# Uses get_next_entry() to crawl through the html source code and append all job postings to raw_entries
     file = urllib.request.urlopen('https://www.wildlife.ca.gov/Employment/Seasonal')
     html = str(file.read())
     raw_entries = []
@@ -27,6 +29,7 @@ def get_all_entries():
             html_block = html_block[end_entry:]
         else:
             break
+# Cleans up raw_entries and creates dictionary, adding location as key and date/url as value
     entries = {}
     for entry in raw_entries:
         start_loc = entry.find('ocated in')+10
@@ -48,6 +51,7 @@ def get_all_entries():
             entries[location].append([date,url])
         else:
             entries[location]=[[date,url]]
+# Selects San Diego and La Jolla location keys and adds to new dictionary
     sd_entries = {}
     for entry in entries:
         if 'iego' in entry:
@@ -60,11 +64,12 @@ def get_all_entries():
                 sd_entries[entry].append(entries[entry])
             if not entry in sd_entries:
                 sd_entries[entry] = entries[entry]  
-#save entries
+# Saves the new day's sd_entries to file
     pickle.dump(sd_entries, open( "C:/Users/Dan Averbuj/Documents/Misc/Programming/save.p", "wb" ) )
     new=sd_entries
-# Load the dictionary back from the pickle file.
+# Loads yesterday's sd_entries into variable
     old = pickle.load( open( "C:/Users/Dan Averbuj/Documents/Misc/Programming/save.p", "rb" ) )
+# Finds any differences between yesterday's and today's sd_entries and adds to new dictionary
     diff = {}
     if old != new:
         keys = old.keys()
@@ -78,8 +83,8 @@ def get_all_entries():
                     diff[key].append(list(set(nt) - set(ot)))
     else:
         return False
-    save_entries()
-#send mail
+    pickle.dump(sd_entries, open( "C:/Users/Dan Averbuj/Documents/Misc/Programming/save.p", "wb" ) )
+# Sends emil with the results
     content = ''
     if diff:
         for entry in diff:
