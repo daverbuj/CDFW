@@ -3,11 +3,6 @@ from pprint import pprint
 import urllib.request
 import smtplib
 
-def get_html():
-    file = urllib.request.urlopen('https://www.wildlife.ca.gov/Employment/Seasonal')
-    html = str(file.read())
-    return html
-
 def get_next_entry(html_block):
     start_point = html_block.find('<a href=')
     if start_point == -1:
@@ -19,7 +14,8 @@ def get_next_entry(html_block):
     return entry, end_entry
     
 def get_all_entries():
-    html = get_html()
+    file = urllib.request.urlopen('https://www.wildlife.ca.gov/Employment/Seasonal')
+    html = str(file.read())
     raw_entries = []
     block_start = html.find('<div class="normal">')
     block_end = html.find('<div style="display')
