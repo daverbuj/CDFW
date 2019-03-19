@@ -84,7 +84,7 @@ def send_jobs():
     else:
         return False
     pickle.dump(sd_entries, open( "C:/Users/Dan Averbuj/Documents/Misc/Programming/save.p", "wb" ) )
-# Sends emil with the results
+# Sends email with the results
     content = ''
     if diff:
         for entry in diff:
